@@ -1,0 +1,20 @@
+[
+  { "id": "chem-physical", "subject": "chemistry", "name": "Physical Chemistry", "parentId": null },
+  { "id": "chem-atomic-structure", "subject": "chemistry", "name": "Atomic Structure & Quantum Numbers", "parentId": "chem-physical" },
+  { "id": "chem-stoichiometry", "subject": "chemistry", "name": "Stoichiometry & Mole Concept", "parentId": "chem-physical" },
+  { "id": "chem-gaseous-state", "subject": "chemistry", "name": "Gaseous State & van der Waals", "parentId": "chem-physical" },
+  { "id": "chem-solutions", "subject": "chemistry", "name": "Solutions & Concentration", "parentId": "chem-physical" },
+  { "id": "chem-thermodynamics", "subject": "chemistry", "name": "Thermodynamics", "parentId": "chem-physical" },
+  { "id": "chem-equilibrium", "subject": "chemistry", "name": "Equilibrium (Chemical & Ionic)", "parentId": "chem-physical" },
+  { "id": "chem-redox", "subject": "chemistry", "name": "Redox Reactions", "parentId": "chem-physical" },
+  { "id": "chem-electrochemistry", "subject": "chemistry", "name": "Electrochemistry", "parentId": "chem-physical" },
+  { "id": "chem-kinetics", "subject": "chemistry", "name": "Chemical Kinetics", "parentId": "chem-physical" },
+  { "id": "chem-inorganic", "subject": "chemistry", "name": "Inorganic Chemistry", "parentId": null },
+  { "id": "chem-periodic", "subject": "chemistry", "name": "Periodic Table & Properties", "parentId": "chem-inorganic" },
+  { "id": "chem-bonding", "subject": "chemistry", "name": "Chemical Bonding", "parentId": "chem-inorganic" },
+  { "id": "chem-coordination", "subject": "chemistry", "name": "Coordination Compounds", "parentId": "chem-inorganic" },
+  { "id": "chem-organic", "subject": "chemistry", "name": "Organic Chemistry", "parentId": null },
+  { "id": "chem-goc", "subject": "chemistry", "name": "General Organic Chemistry (GOC)", "parentId": "chem-organic" },
+  { "id": "chem-hydrocarbons", "subject": "chemistry", "name": "Hydrocarbons", "parentId": "chem-organic" },
+  { "id": "chem-name-reactions", "subject": "chemistry", "name": "Named Reactions & Mechanisms", "parentId": "chem-organic" }
+]

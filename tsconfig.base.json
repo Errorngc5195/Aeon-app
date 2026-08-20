@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2020"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@jee/shared-types": ["packages/shared-types/src"],
+      "@jee/planner-engine": ["packages/planner-engine/src"],
+      "@jee/ai-router": ["packages/ai-router/src"],
+      "@jee/syllabus-graph": ["packages/syllabus-graph/src"]
+    }
+  }
+}

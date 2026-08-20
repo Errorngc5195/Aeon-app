@@ -1,0 +1,22 @@
+[
+  { "id": "phy-mechanics", "subject": "physics", "name": "Mechanics", "parentId": null },
+  { "id": "phy-kinematics", "subject": "physics", "name": "Kinematics", "parentId": "phy-mechanics" },
+  { "id": "phy-kinematics-1d", "subject": "physics", "name": "1D Motion, Non-uniform Acceleration", "parentId": "phy-kinematics" },
+  { "id": "phy-kinematics-graphs", "subject": "physics", "name": "Position-Velocity-Acceleration Graphs", "parentId": "phy-kinematics" },
+  { "id": "phy-kinematics-2d", "subject": "physics", "name": "Projectile & Relative Motion", "parentId": "phy-kinematics" },
+  { "id": "phy-laws-of-motion", "subject": "physics", "name": "Laws of Motion", "parentId": "phy-mechanics" },
+  { "id": "phy-wep", "subject": "physics", "name": "Work, Energy, Power", "parentId": "phy-mechanics" },
+  { "id": "phy-com", "subject": "physics", "name": "Centre of Mass & Momentum", "parentId": "phy-mechanics" },
+  { "id": "phy-rotation", "subject": "physics", "name": "Rotational Motion", "parentId": "phy-mechanics" },
+  { "id": "phy-gravitation", "subject": "physics", "name": "Gravitation", "parentId": "phy-mechanics" },
+  { "id": "phy-shm", "subject": "physics", "name": "SHM & Oscillations", "parentId": null },
+  { "id": "phy-waves", "subject": "physics", "name": "Waves", "parentId": null },
+  { "id": "phy-fluids", "subject": "physics", "name": "Fluid Mechanics", "parentId": null },
+  { "id": "phy-thermo", "subject": "physics", "name": "Thermodynamics", "parentId": null },
+  { "id": "phy-electrostatics", "subject": "physics", "name": "Electrostatics", "parentId": null },
+  { "id": "phy-current-electricity", "subject": "physics", "name": "Current Electricity", "parentId": null },
+  { "id": "phy-magnetism", "subject": "physics", "name": "Magnetism", "parentId": null },
+  { "id": "phy-emi-ac", "subject": "physics", "name": "EMI & AC", "parentId": null },
+  { "id": "phy-optics", "subject": "physics", "name": "Optics", "parentId": null },
+  { "id": "phy-modern", "subject": "physics", "name": "Modern Physics", "parentId": null }
+]

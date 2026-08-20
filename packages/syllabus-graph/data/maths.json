@@ -1,0 +1,20 @@
+[
+  { "id": "math-algebra", "subject": "maths", "name": "Algebra", "parentId": null },
+  { "id": "math-logarithms", "subject": "maths", "name": "Logarithms & Inequalities", "parentId": "math-algebra" },
+  { "id": "math-quadratics", "subject": "maths", "name": "Quadratic Equations", "parentId": "math-algebra" },
+  { "id": "math-sequences", "subject": "maths", "name": "Sequences & Series", "parentId": "math-algebra" },
+  { "id": "math-complex", "subject": "maths", "name": "Complex Numbers", "parentId": "math-algebra" },
+  { "id": "math-permutations", "subject": "maths", "name": "Permutations, Combinations & Probability", "parentId": "math-algebra" },
+  { "id": "math-trigonometry", "subject": "maths", "name": "Trigonometry", "parentId": null },
+  { "id": "math-trig-equations", "subject": "maths", "name": "Trigonometric Equations (SL Loney)", "parentId": "math-trigonometry" },
+  { "id": "math-calculus", "subject": "maths", "name": "Calculus", "parentId": null },
+  { "id": "math-differentiation", "subject": "maths", "name": "Differentiation", "parentId": "math-calculus" },
+  { "id": "math-integration", "subject": "maths", "name": "Integration (First Principles, Substitution)", "parentId": "math-calculus" },
+  { "id": "math-definite-integrals", "subject": "maths", "name": "Definite Integrals & Applications", "parentId": "math-calculus" },
+  { "id": "math-diff-equations", "subject": "maths", "name": "Differential Equations", "parentId": "math-calculus" },
+  { "id": "math-coordinate", "subject": "maths", "name": "Coordinate Geometry", "parentId": null },
+  { "id": "math-straight-lines", "subject": "maths", "name": "Straight Lines & Circles", "parentId": "math-coordinate" },
+  { "id": "math-conics", "subject": "maths", "name": "Conic Sections", "parentId": "math-coordinate" },
+  { "id": "math-vectors-3d", "subject": "maths", "name": "Vectors & 3D Geometry", "parentId": null },
+  { "id": "math-matrices", "subject": "maths", "name": "Matrices & Determinants", "parentId": null }
+]

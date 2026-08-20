@@ -1,0 +1,13 @@
+-- Seeds the `topics` table from packages/syllabus-graph/data/*.json.
+-- This file is a placeholder — generate the actual INSERT statements from
+-- the JSON files once we wire up a small script (or paste manually, since
+-- the topic count is small enough to do by hand initially).
+--
+-- Example row shape:
+-- insert into topics (id, subject, name, parent_id) values
+--   ('phy-mechanics', 'physics', 'Mechanics', null),
+--   ('phy-kinematics', 'physics', 'Kinematics', 'phy-mechanics');
+--
+-- TODO: write a small node script (scripts/generate-seed.ts) that reads
+-- the syllabus-graph JSON files and outputs this file automatically, so
+-- the two never drift out of sync.

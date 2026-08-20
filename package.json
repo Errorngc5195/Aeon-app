@@ -1,0 +1,20 @@
+{
+  "name": "jee-companion",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "mobile": "npm run start --workspace=apps/mobile",
+    "build:planner": "npm run build --workspace=packages/planner-engine",
+    "build:ai-router": "npm run build --workspace=packages/ai-router",
+    "build:syllabus": "npm run build --workspace=packages/syllabus-graph",
+    "build:packages": "npm run build:planner && npm run build:ai-router && npm run build:syllabus",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}
