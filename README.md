@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # JEE Companion
 
 AI-powered study operating system for JEE Advanced prep. Not a timetable app —
@@ -38,3 +39,7 @@ the same `.env` keys.
 Early scaffold. Package structure and types are in place; provider
 implementations (`packages/ai-router/src/providers/*`) are stubs pending
 actual API wiring.
+=======
+# Aeon-app
+A all-in-one study app for a jee aspirant (me), just a personal leveling up project based on modern ai systems.
+>>>>>>> 9c635d893e9b4a9514c36d3e04300396972d4001

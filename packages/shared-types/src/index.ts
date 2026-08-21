@@ -44,6 +44,29 @@ export interface Task {
   completedAt: string | null;
 }
 
+// Input shapes for creating/updating tasks — used by TaskRepository.
+// Deliberately separate from Task: callers shouldn't be able to set id,
+// createdAt, or completedAt directly on create.
+export interface CreateTaskInput {
+  subject: Subject;
+  topicId: string;
+  type: TaskType;
+  title: string;
+  estimatedMinutes: number;
+  deadline: string | null;
+  isOptional: boolean;
+  sourceDocId: string | null;
+}
+
+export interface UpdateTaskInput {
+  title?: string;
+  estimatedMinutes?: number;
+  deadline?: string | null;
+  isOptional?: boolean;
+  topicId?: string;
+  type?: TaskType;
+}
+
 export interface PriorityInputs {
   deadlineUrgency: number;   // 0-1, computed from days-to-deadline
   testProximity: number;     // 0-1, boosted if covers upcoming test syllabus

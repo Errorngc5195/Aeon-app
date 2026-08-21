@@ -15,6 +15,19 @@ export interface SchedulerOptions {
   tasks: ScoredTask[];     // already ranked by priorityScore, highest first
 }
 
+export interface DeferredTask {
+  taskId: string;
+  title: string;
+  estimatedMinutes: number;
+  priorityScore: number;
+  reason: "no_window_large_enough" | "day_full";
+}
+
+export interface SchedulingResult extends DaySchedule {
+  deferred: DeferredTask[];      // tasks that did NOT fit anywhere today
+  totalDeferredMinutes: number;  // sum of deferred.estimatedMinutes, for "2h 10m remaining" messaging
+}
+
 interface FreeWindow {
   start: number; // epoch ms
   end: number;
@@ -28,8 +41,14 @@ interface FreeWindow {
  * The AI layer (packages/ai-router) sits ABOVE this: it decides task
  * priority weighting nuance and triggers regeneration, but the actual
  * time-slotting math lives here so it's fast, free, and testable.
+ *
+ * IMPORTANT: this function never silently drops a task. Every task in
+ * opts.tasks ends up in exactly one of: a scheduled ScheduleBlock, or the
+ * `deferred` array with a reason. Callers (mobile UI, ai-router) must
+ * surface `deferred` to the user rather than assuming a full schedule
+ * means full coverage — see docs/decisions.md "scheduler never drops tasks".
  */
-export function buildDaySchedule(opts: SchedulerOptions): DaySchedule {
+export function buildDaySchedule(opts: SchedulerOptions): SchedulingResult {
   const dayStartMs = new Date(opts.dayStart).getTime();
   const dayEndMs = new Date(opts.dayEnd).getTime();
 
@@ -53,16 +72,30 @@ export function buildDaySchedule(opts: SchedulerOptions): DaySchedule {
   );
 
   const taskBlocks: ScheduleBlock[] = [];
+  const deferred: DeferredTask[] = [];
   const breakMs = opts.minBreakMinutes * 60_000;
-  let taskIdx = 0;
+
+  // Try each task against each window in order. A task that doesn't fit
+  // in the current window may still fit in a later one (e.g. a short gap
+  // before coaching, then a long evening window) — so we don't just bail
+  // on first miss like the old implementation did.
+  const remaining = [...opts.tasks];
 
   for (const window of freeWindows) {
     let cursor = window.start;
-    while (taskIdx < opts.tasks.length && cursor < window.end) {
-      const task = opts.tasks[taskIdx];
+    let i = 0;
+    while (i < remaining.length) {
+      const task = remaining[i];
       const durationMs = task.estimatedMinutes * 60_000;
       const blockEnd = cursor + durationMs;
-      if (blockEnd > window.end) break; // doesn't fit in remaining window
+
+      if (blockEnd > window.end) {
+        // Doesn't fit in what's left of THIS window — try the next task
+        // against the same window (a shorter one later in the list might
+        // still fit), don't abandon the whole window on first miss.
+        i += 1;
+        continue;
+      }
 
       taskBlocks.push({
         id: `task-${task.id}`,
@@ -75,8 +108,18 @@ export function buildDaySchedule(opts: SchedulerOptions): DaySchedule {
       });
 
       cursor = blockEnd + breakMs;
-      taskIdx += 1;
+      remaining.splice(i, 1); // scheduled — remove from remaining, don't advance i
     }
+  }
+
+  for (const task of remaining) {
+    deferred.push({
+      taskId: task.id,
+      title: task.title,
+      estimatedMinutes: task.estimatedMinutes,
+      priorityScore: task.priorityScore,
+      reason: "no_window_large_enough",
+    });
   }
 
   const allBlocks = [...fixedBlocks, ...taskBlocks].sort(
@@ -88,6 +131,8 @@ export function buildDaySchedule(opts: SchedulerOptions): DaySchedule {
     blocks: allBlocks,
     generatedAt: new Date().toISOString(),
     regeneratedReason: null,
+    deferred,
+    totalDeferredMinutes: deferred.reduce((sum, d) => sum + d.estimatedMinutes, 0),
   };
 }
 

@@ -11,7 +11,8 @@
     "build:planner": "npm run build --workspace=packages/planner-engine",
     "build:ai-router": "npm run build --workspace=packages/ai-router",
     "build:syllabus": "npm run build --workspace=packages/syllabus-graph",
-    "build:packages": "npm run build:planner && npm run build:ai-router && npm run build:syllabus",
+    "build:data-access": "npm run build --workspace=packages/data-access",
+    "build:packages": "npm run build:planner && npm run build:ai-router && npm run build:syllabus && npm run build:data-access",
     "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {

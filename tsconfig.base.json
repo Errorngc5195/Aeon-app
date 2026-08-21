@@ -15,7 +15,8 @@
       "@jee/shared-types": ["packages/shared-types/src"],
       "@jee/planner-engine": ["packages/planner-engine/src"],
       "@jee/ai-router": ["packages/ai-router/src"],
-      "@jee/syllabus-graph": ["packages/syllabus-graph/src"]
+      "@jee/syllabus-graph": ["packages/syllabus-graph/src"],
+      "@jee/data-access": ["packages/data-access/src"]
     }
   }
 }

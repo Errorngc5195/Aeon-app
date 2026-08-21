@@ -8,8 +8,10 @@ redesign them because you got stuck.
 ## Do NOT change without explicit human instruction
 
 1. **Package boundaries.** `planner-engine` has zero AI dependency. It
-   never imports from `ai-router`. This is enforced by design, not by
-   accident — see `docs/decisions.md`.
+   never imports from `ai-router`. `data-access` (TaskRepository) is the
+   only path to storage — the mobile UI and the AI layer both go through
+   it, neither talks to Supabase directly. This is enforced by design,
+   not by accident — see `docs/decisions.md`.
 
 2. **Database architecture.** Tables in `supabase/migrations/0001_init.sql`
    and their RLS policies. Add migrations, don't rewrite existing ones.
@@ -25,7 +27,22 @@ redesign them because you got stuck.
    `generate()`. If a provider needs something outside this interface,
    that's a signal to flag it, not to add a provider-specific escape hatch.
 
-5. **Free-tier-only tooling and inference.** No paid coding tools, no paid
+5. **The `TaskRepository` interface** (`packages/data-access/src/taskRepository.ts`).
+   `getTasks() / getTask() / createTask() / updateTask() / completeTask() /
+   deleteTask()`. This is the only path to task storage. No component —
+   including the AI layer — writes to Supabase (or any future local
+   cache) directly. AI-created tasks pass through the exact same
+   `validateCreateTaskInput()` / `validateUpdateTaskInput()` as manual
+   ones. There is no AI bypass.
+
+6. **The scheduler never silently drops tasks.** `buildDaySchedule()`
+   returns every input task in either a `ScheduleBlock` or the
+   `deferred` array with a reason. Don't "simplify" this back to
+   silently dropping tasks that don't fit — callers depend on
+   `deferred`/`totalDeferredMinutes` to tell the user the truth about
+   their workload.
+
+7. **Free-tier-only tooling and inference.** No paid coding tools, no paid
    AI API tiers, unless explicitly told otherwise.
 
 ## What IS fine to do

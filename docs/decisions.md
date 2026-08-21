@@ -67,3 +67,27 @@ Supabase or real AI provider calls enter the picture. Reasoning: fewer
 moving pieces at once makes debugging with free/rate-limited coding
 agents tractable — each phase gets tested and committed before the next
 begins. Full milestone breakdown in docs/architecture.md.
+
+## 2026-08-21 — Scheduler must never silently drop tasks
+Fixed a real bug (not just a design choice): the original `buildDaySchedule`
+used `if (blockEnd > window.end) break;` which abandoned the entire
+remaining window on the first task that didn't fit, silently losing every
+task after it in priority order. Rewrote to try each remaining task
+against the current window before moving on, and added `DeferredTask[]` +
+`totalDeferredMinutes` to the return shape so every input task ends up
+either scheduled or explicitly deferred with a reason. Verified via a
+15-task stress test with deliberately conflicting durations/priorities —
+confirmed 9 scheduled + 6 deferred = 15 in, 15 accounted for, zero loss.
+
+## 2026-08-21 — Added data-access package: TaskRepository abstraction
+New package sitting between the mobile UI and any storage backend
+(currently `InMemoryTaskRepository`, will add `SupabaseTaskRepository`
+with the same interface in the Supabase step). Reasoning: keeps storage
+swappable (local SQLite cache + Supabase sync later, per the offline-first
+goal) without UI rewrites, and creates a single enforcement point for
+validation — `validateCreateTaskInput()` / `validateUpdateTaskInput()` —
+that both manual task creation and future AI-driven task creation must
+pass through identically. No AI bypass path exists or should ever exist.
+`CreateTaskInput` / `UpdateTaskInput` added to shared-types to support
+this (separate from `Task` so callers can't set `id`/`createdAt`/
+`completedAt` directly).

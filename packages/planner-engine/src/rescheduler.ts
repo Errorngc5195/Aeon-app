@@ -1,5 +1,5 @@
-import type { DaySchedule, ScoredTask } from "@jee/shared-types";
-import { buildDaySchedule, type SchedulerOptions } from "./scheduler";
+import type { ScoredTask } from "@jee/shared-types";
+import { buildDaySchedule, type SchedulerOptions, type SchedulingResult } from "./scheduler";
 
 export type RescheduleTrigger =
   | { kind: "test_announced"; testDate: string; affectedTopicIds: string[] }
@@ -47,7 +47,7 @@ export function applyTrigger(
 export function regenerateSchedule(
   opts: SchedulerOptions,
   reason: string
-): DaySchedule {
+): SchedulingResult {
   const schedule = buildDaySchedule(opts);
   return { ...schedule, regeneratedReason: reason };
 }
