@@ -1,0 +1,13 @@
+# Normalize line endings so Windows/Mac/Linux contributors don't fight
+# each other, and stop the "LF will be replaced by CRLF" warning noise.
+* text=auto eol=lf
+
+# Binary files — never touch these
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
