@@ -16,6 +16,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present"
   },
   "devDependencies": {
+    "supabase": "^2.115.0",
     "typescript": "^5.6.0"
   }
 }
