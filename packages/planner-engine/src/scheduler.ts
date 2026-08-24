@@ -1,4 +1,5 @@
 import type { ScheduleBlock, ScoredTask, DaySchedule } from "@jee/shared-types";
+import { explainPriorityScore } from "./priorityScore";
 
 export interface FixedEvent {
   label: string;
@@ -60,6 +61,7 @@ export function buildDaySchedule(opts: SchedulerOptions): SchedulingResult {
     endTime: e.endTime,
     type: "fixed_event",
     locked: true,
+    reasoning: ["Fixed event — not scheduled by priority"],
   }));
 
   const freeWindows = computeFreeWindows(
@@ -105,6 +107,7 @@ export function buildDaySchedule(opts: SchedulerOptions): SchedulingResult {
         endTime: new Date(blockEnd).toISOString(),
         type: task.type,
         locked: false,
+        reasoning: explainPriorityScore(task),
       });
 
       cursor = blockEnd + breakMs;

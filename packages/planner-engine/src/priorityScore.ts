@@ -55,3 +55,27 @@ export function scoreTask(task: Task, inputs: PriorityInputs): ScoredTask {
 export function rankTasks(scored: ScoredTask[]): ScoredTask[] {
   return [...scored].sort((a, b) => b.priorityScore - a.priorityScore);
 }
+
+// Human-readable breakdown of WHY a task scored what it did — powers the
+// "Why this schedule?" / "Task reasoning" UI. Deliberately separate from
+// AI reasoning: this reflects only the deterministic formula, so a person
+// can always trust it as ground truth regardless of what any AI said.
+export function explainPriorityScore(task: ScoredTask): string[] {
+  const { priorityInputs: inputs, priorityScore } = task;
+  const contributions: { label: string; points: number }[] = [
+    { label: "Deadline urgency", points: Math.round(inputs.deadlineUrgency * PRIORITY_WEIGHTS.deadlineUrgency * 100) },
+    { label: "Test proximity", points: Math.round(inputs.testProximity * PRIORITY_WEIGHTS.testProximity * 100) },
+    { label: "Academic importance", points: Math.round(inputs.academicImportance * PRIORITY_WEIGHTS.academicImportance * 100) },
+    { label: "Weakness", points: Math.round(inputs.weakness * PRIORITY_WEIGHTS.weakness * 100) },
+    { label: "Forgetting risk", points: Math.round(inputs.forgettingRisk * PRIORITY_WEIGHTS.forgettingRisk * 100) },
+    { label: "Backlog age", points: Math.round(inputs.backlogAge * PRIORITY_WEIGHTS.backlogAge * 100) },
+  ];
+
+  const lines = contributions
+    .filter((c) => c.points > 0)
+    .sort((a, b) => b.points - a.points)
+    .map((c) => `${c.label}: +${c.points}`);
+
+  lines.push(`Total priority score: ${priorityScore}`);
+  return lines;
+}

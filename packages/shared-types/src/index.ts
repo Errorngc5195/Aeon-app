@@ -89,6 +89,7 @@ export interface ScheduleBlock {
   endTime: string;           // ISO datetime
   type: TaskType | "fixed_event";
   locked: boolean;           // true for coaching/school, planner won't move it
+  reasoning: string[];       // human-readable factors behind placement, e.g. "Test proximity: Thursday", "Priority 91"
 }
 
 export interface DaySchedule {
@@ -109,6 +110,54 @@ export interface PlanningIntent {
   deadline: string | null;
   preferredSessionCount: number | null; // e.g. split into 4 sessions
   reasoning: string;           // human-readable, shown to user for transparency
+}
+
+// ─── Brain dump extraction types ───────────────────────────────────────
+// Output shape for AI parsing of freeform text/PDF/image input into
+// planner-relevant structured data. This is what the AI router returns —
+// it still goes through validation and TaskRepository before touching
+// storage, exactly like manually created tasks. AI NEVER emits
+// ScheduleBlock[] — only this intermediate structured form.
+
+export interface ExtractedTask {
+  title: string;
+  subject: Subject | null;         // null if AI couldn't determine it
+  topicHint: string | null;        // free-text topic guess, resolved to a real topicId by the app layer
+  type: TaskType;
+  estimatedMinutes: number;
+  deadline: string | null;         // ISO date, resolved from relative phrases like "Thursday"
+  isOptional: boolean;
+  confidence: number;              // 0-1, how sure the AI is about this extraction
+}
+
+export interface ExtractedUnavailablePeriod {
+  label: string;                   // e.g. "Can't study Wednesday evening"
+  startTime: string;               // ISO datetime
+  endTime: string;                 // ISO datetime
+}
+
+export interface ExtractedTest {
+  subject: Subject | null;
+  label: string;                   // e.g. "Physics test"
+  date: string;                    // ISO date
+  topicHints: string[];            // free-text topics the test covers, if mentioned
+}
+
+export interface ExtractedRecurringGoal {
+  label: string;                   // e.g. "30 min previous chapter revision daily"
+  subject: Subject | null;
+  minutesPerOccurrence: number;
+  frequency: "daily" | "weekly";
+}
+
+export interface BrainDumpResult {
+  tasks: ExtractedTask[];
+  unavailablePeriods: ExtractedUnavailablePeriod[];
+  tests: ExtractedTest[];
+  recurringGoals: ExtractedRecurringGoal[];
+  rawInput: string;                // original text, kept for audit/debugging
+  parsedAt: string;
+  providerId: string;              // which AIProvider produced this, for debugging
 }
 
 export interface EnergyLog {
@@ -165,6 +214,12 @@ export interface AIRequest {
   requiredCapabilityLevel: ModelCapabilityLevel; // minimum tier, capability-before-quota
   requiresVision?: boolean;
   maxLatencyMs?: number;
+  // Optional JSON schema the caller wants the response constrained to.
+  // Providers that support structured output (Gemini responseSchema,
+  // etc.) should use this. Providers that don't support it should ignore
+  // it and return free text — callers requesting structured_output
+  // capability are responsible for validating/parsing what comes back.
+  responseSchema?: object;
 }
 
 export interface AIResponse {

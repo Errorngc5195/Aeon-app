@@ -1,4 +1,4 @@
-import type { CreateTaskInput, UpdateTaskInput } from "@jee/shared-types";
+import type { CreateTaskInput, UpdateTaskInput, ExtractedTask } from "@jee/shared-types";
 
 export class TaskValidationError extends Error {
   constructor(message: string) {
@@ -50,4 +50,27 @@ export function validateUpdateTaskInput(patch: UpdateTaskInput): void {
   ) {
     throw new TaskValidationError("deadline is not a valid date: " + patch.deadline);
   }
+}
+
+// Converts AI-extracted brain-dump tasks into validated CreateTaskInput.
+// This is the ONE place AI output crosses into the same validated path
+// manual task creation uses — see CONSTRAINTS.md "no AI bypass".
+// topicHint (freeform AI guess) is not the same as topicId (a real
+// syllabus-graph id) — callers should resolve topicHint against
+// syllabus-graph before calling this where possible. If unresolved, we
+// fall back to a placeholder id rather than silently dropping the task,
+// since an unresolved topic is still a real task the user needs to see.
+export function extractedTaskToCreateInput(extracted: ExtractedTask, resolvedTopicId: string | null): CreateTaskInput {
+  const input: CreateTaskInput = {
+    subject: extracted.subject ?? "physics", // default subject — app layer should prompt user to confirm if null
+    topicId: resolvedTopicId ?? "unresolved",
+    type: extracted.type,
+    title: extracted.title,
+    estimatedMinutes: extracted.estimatedMinutes,
+    deadline: extracted.deadline,
+    isOptional: extracted.isOptional,
+    sourceDocId: null,
+  };
+  validateCreateTaskInput(input);
+  return input;
 }

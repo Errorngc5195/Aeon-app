@@ -1,6 +1,6 @@
 import type { Task, CreateTaskInput, UpdateTaskInput } from "@jee/shared-types";
-import type { TaskRepository } from "./taskRepository";
-import { validateCreateTaskInput, validateUpdateTaskInput } from "./validation";
+import type { TaskRepository } from "./TaskRepository";
+import { validateCreateTaskInput, validateUpdateTaskInput } from "../validation";
 
 // Reference implementation of TaskRepository backed by an in-memory Map.
 // Useful for: testing the repository interface shape before Supabase is
