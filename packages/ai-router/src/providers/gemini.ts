@@ -15,7 +15,11 @@ import type {
 // pass a JSON schema in AIRequest get back parseable structured output
 // (needed for BrainDumpResult extraction) rather than free-text that
 // needs fragile manual parsing.
-const GEMINI_MODEL = "gemini-2.0-flash"; // update if a newer stable free-tier model becomes available
+// gemini-2.0-flash (shut down June 1, 2026) and gemini-2.5-flash-lite
+// (closed to new users) were both dead ends — see docs/decisions.md for
+// the full debugging trail. Google's own 404 error for the latter named
+// this as the direct replacement.
+const GEMINI_MODEL = "gemini-3.5-flash-lite";
 const GEMINI_ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 export class GeminiProvider implements AIProvider {
@@ -78,9 +82,12 @@ export class GeminiProvider implements AIProvider {
     }
 
     try {
-      const res = await fetch(`${GEMINI_ENDPOINT}?key=${this.apiKey}`, {
+      const res = await fetch(GEMINI_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "X-goog-api-key": this.apiKey,
+        },
         body: JSON.stringify(body),
       });
 
@@ -94,6 +101,8 @@ export class GeminiProvider implements AIProvider {
 
       if (!res.ok) {
         this.consecutiveFailures += 1;
+        const errBody = await res.text().catch(() => "");
+        console.warn(`Gemini API error ${res.status}: ${errBody}`);
         return null;
       }
 

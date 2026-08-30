@@ -91,3 +91,18 @@ pass through identically. No AI bypass path exists or should ever exist.
 `CreateTaskInput` / `UpdateTaskInput` added to shared-types to support
 this (separate from `Task` so callers can't set `id`/`createdAt`/
 `completedAt` directly).
+
+## 2026-08-25 — Gemini model name churns fast; verify against live quota, not docs
+Hit three dead ends in one debugging session: `gemini-2.0-flash` (hardcoded
+originally) was shut down June 1, 2026. `gemini-flash-latest` (an alias)
+returned 503 "high demand" — turned out the alias was resolving to a
+model with zero allocated quota on this account, not actually a capacity
+issue. `gemini-2.5-flash-lite` returned 404 "no longer available to new
+users." Settled on `gemini-3.5-flash-lite`, confirmed working via direct
+curl test with a real key before touching the app layer. Lesson: for a
+fast-moving free-tier API, verify against https://aistudio.google.com/usage
+(shows real per-model quota) and test the exact model+endpoint with curl
+BEFORE debugging through the app — saves ruling out the wrong layer.
+`AIProvider.getHealth()`/`getQuota()` existing as first-class concepts
+(rather than being bolted on later) is exactly why the router can handle
+a model going stale without other code changing.

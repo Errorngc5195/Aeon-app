@@ -43,7 +43,7 @@ function BlockRow({ block }: { block: ScheduleBlock }) {
   );
 }
 
-export function TodayScreen() {
+export function TodayScreen({ onOpenBrainDump }: { onOpenBrainDump: () => void }) {
   const { signOut } = useAuth();
   const today = new Date();
   const dateStr = today.toISOString().slice(0, 10);
@@ -74,6 +74,12 @@ export function TodayScreen() {
           <BlockRow key={block.id} block={block} />
         ))}
 
+        <View style={styles.brainDumpButton}>
+          <Pressable style={styles.brainDumpButtonInner} onPress={onOpenBrainDump}>
+            <Text style={styles.brainDumpButtonText}>+ Brain Dump</Text>
+          </Pressable>
+        </View>
+
         {result.deferred.length > 0 && (
           <View style={styles.deferredSection}>
             <Text style={styles.deferredHeading}>
@@ -101,6 +107,9 @@ const styles = StyleSheet.create({
   heading: { fontSize: 26, fontWeight: "700" },
   subheading: { fontSize: 13, color: "#666", marginTop: 2 },
   signOut: { color: "#c00", fontSize: 13, marginTop: 4 },
+  brainDumpButton: { marginTop: 16, alignItems: "center" },
+  brainDumpButtonInner: { backgroundColor: "#111", borderRadius: 24, paddingVertical: 12, paddingHorizontal: 28 },
+  brainDumpButtonText: { color: "#fff", fontWeight: "700", fontSize: 15 },
   block: { borderWidth: 1, borderColor: "#e2e2e2", borderRadius: 10, padding: 12, marginBottom: 10, marginTop: 12 },
   blockFixed: { backgroundColor: "#f3f3f3", borderColor: "#ccc" },
   blockTime: { fontSize: 12, color: "#888" },
